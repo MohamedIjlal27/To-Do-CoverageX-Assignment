@@ -1,36 +1,152 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Todo App Frontend
 
-## Getting Started
+A modern, responsive Todo application built with Next.js, React, and TypeScript.
 
-First, run the development server:
+## Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Docker and Docker Compose installed on your machine
+- Git (for cloning the repository)
+
+## Environment Variables
+
+Before running the application, you need to set up your environment variables. Create a `.env` file in the root directory with the following variables:
+
+```env
+# Required - API Configuration
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3001  # Replace with your API URL
+
+# Optional - Application Configuration
+NODE_ENV=development  # or production
+PORT=3000            # Default port for the application
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Note: Make sure to replace the `NEXT_PUBLIC_API_BASE_URL` with your actual API endpoint URL.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Running with Docker
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Option 1: Using Docker Compose (Recommended)
 
-## Learn More
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd to-do
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. Create a `.env` file in the root directory:
+```bash
+# Example .env file content
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Build and run the container:
+```bash
+docker-compose up --build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application will be available at `http://localhost:3000`
 
-## Deploy on Vercel
+### Option 2: Using Docker Directly
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Build the Docker image:
+```bash
+docker build -t todo-frontend .
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Run the container with environment variables:
+```bash
+docker run -p 3000:3000 --env-file .env todo-frontend
+```
+
+Or specify the environment variable directly:
+```bash
+docker run -p 3000:3000 -e NEXT_PUBLIC_API_BASE_URL=http://localhost:3001 todo-frontend
+```
+
+## Development
+
+### Running Locally Without Docker
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Create a `.env` file in the root directory:
+```bash
+echo "NEXT_PUBLIC_API_BASE_URL=http://localhost:3001" > .env
+```
+
+3. Run the development server:
+```bash
+npm run dev
+```
+
+4. Run tests:
+```bash
+npm test
+```
+
+For watch mode during development:
+```bash
+npm run test:watch
+```
+
+## Project Structure
+
+```
+to-do/
+├── src/
+│   ├── app/
+│   │   ├── components/     # React components
+│   │   ├── __tests__/     # Component tests
+│   │   └── ...
+│   ├── config/            # Configuration files
+│   ├── types/             # TypeScript type definitions
+│   └── ...
+├── public/                # Static files
+├── .env                   # Environment variables
+├── Dockerfile            
+├── docker-compose.yml    
+└── ...
+```
+
+## Testing
+
+The project uses Jest and React Testing Library for testing. Test files are located next to the components they test in `__tests__` directories.
+
+To run tests:
+```bash
+npm test
+```
+
+## Environment Variables Reference
+
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| NEXT_PUBLIC_API_BASE_URL | Base URL for the backend API | Yes | http://localhost:3001 |
+| NODE_ENV | Environment mode | No | development |
+| PORT | Application port | No | 3000 |
+
+## Troubleshooting
+
+1. **API Connection Issues**
+   - Verify that your `NEXT_PUBLIC_API_BASE_URL` is correct
+   - Ensure the API server is running and accessible
+   - Check for any CORS configuration issues
+
+2. **Docker Issues**
+   - Make sure Docker daemon is running
+   - Try removing existing containers: `docker-compose down`
+   - Clear Docker cache: `docker system prune`
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details
