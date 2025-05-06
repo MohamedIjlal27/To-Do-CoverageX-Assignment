@@ -1,5 +1,17 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
 
+export interface PaginationParams {
+  limit: number;
+  page: number;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+}
+
 export async function createTask(title: string, description: string) {
   const response = await fetch(`${API_BASE_URL}/tasks/create`, {
     method: 'POST',
@@ -14,14 +26,20 @@ export async function createTask(title: string, description: string) {
   return response.json();
 }
 
-export async function getAllTasks() {
-  const response = await fetch(`${API_BASE_URL}/tasks/list?limit=5`, {
+export async function getAllTasks({ limit, page }: PaginationParams): Promise<PaginatedResponse<any>> {
+  const response = await fetch(`${API_BASE_URL}/tasks/list?limit=${limit}&page=${page}`, {
     method: 'GET',
   });
   if (!response.ok) {
     throw new Error('Failed to fetch tasks');
   }
-  return response.json();
+  const data = await response.json();
+  return {
+    data: data,
+    total: data.length,
+    totalPages: Math.ceil(data.length / limit),
+    currentPage: page
+  };
 }
 
 export async function getTaskById(id: string) {
