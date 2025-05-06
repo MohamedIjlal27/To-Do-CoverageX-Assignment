@@ -6,13 +6,14 @@ interface TodoCardProps {
   id: string;
   title: string;
   description: string;
+  completed?: boolean;
   onComplete: (id: string) => void;
   onDelete: (id: string) => void;
   onEdit: (id: string, title: string, description: string) => void;
   loading?: boolean;
 }
 
-export default function TodoCard({ id, title, description, onComplete, onDelete, onEdit, loading }: TodoCardProps) {
+export default function TodoCard({ id, title, description, completed, onComplete, onDelete, onEdit, loading }: TodoCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDescription, setEditedDescription] = useState(description);
@@ -25,7 +26,7 @@ export default function TodoCard({ id, title, description, onComplete, onDelete,
   };
 
   return (
-    <div className="bg-gray-300 rounded-xl p-6 mb-6">
+    <div className={`bg-gray-300 rounded-xl p-6 mb-6 ${completed ? 'opacity-75' : ''}`}>
       <div className="flex justify-between items-center">
         <div className="flex-1">
           {isEditing ? (
@@ -45,18 +46,18 @@ export default function TodoCard({ id, title, description, onComplete, onDelete,
             </div>
           ) : (
             <>
-              <h3 className="text-xl font-bold text-black mb-1">{title}</h3>
-              <p className="text-base text-black">{description}</p>
+              <h3 className={`text-xl font-bold text-black mb-1 ${completed ? 'line-through' : ''}`}>{title}</h3>
+              <p className={`text-base text-black ${completed ? 'line-through' : ''}`}>{description}</p>
             </>
           )}
         </div>
         <div className="flex flex-col gap-2">
           <button
             onClick={() => onComplete(id)}
-            disabled={loading}
-            className={`border border-black text-black font-medium rounded-lg px-6 py-1.5 transition-colors duration-200 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed`}
+            disabled={loading || completed}
+            className={`border border-black text-black font-medium rounded-lg px-6 py-1.5 transition-colors duration-200 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed ${completed ? 'bg-gray-400' : ''}`}
           >
-            Done
+            {completed ? 'Completed' : 'Done'}
           </button>
           <button
             onClick={handleEdit}

@@ -25,6 +25,7 @@ export default function TodoList({ todos, onComplete, onDelete, onEdit, loadingI
           id={todo.id}
           title={todo.title}
           description={todo.description}
+          completed={todo.completed}
           onComplete={onComplete}
           onDelete={onDelete}
           onEdit={onEdit}

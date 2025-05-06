@@ -48,6 +48,19 @@ export async function editTask(id: string, title: string, description: string) {
   return response.json();
 }
 
+export async function completeTask(id: string) {
+  const response = await fetch(`${API_BASE_URL}/tasks/complete/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!response.ok) {
+    throw new Error('Failed to complete task');
+  }
+  return response.json();
+}
+
 export async function deleteTask(id: string) {
   const response = await fetch(`${API_BASE_URL}/tasks/remove/${id}`, {
     method: 'DELETE',

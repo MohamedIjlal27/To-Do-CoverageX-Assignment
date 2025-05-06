@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import TodoForm from '../components/TodoForm';
 import TodoList from '../components/TodoList';
-import { createTask, getAllTasks, editTask, deleteTask } from '../../config/api';
+import { createTask, getAllTasks, editTask, deleteTask, completeTask } from '../../config/api';
 
 interface Todo {
   id: string;
@@ -46,12 +46,9 @@ export default function TodoPage() {
   const handleCompleteTodo = async (id: string) => {
     setCompletingId(id);
     try {
-      const todo = todos.find(t => t.id === id);
-      if (todo) {
-        await editTask(id, todo.title, todo.description);
-        const data = await getAllTasks();
-        setTodos(data);
-      }
+      await completeTask(id);
+      const data = await getAllTasks();
+      setTodos(data);
     } catch (error) {
       console.error('Failed to complete todo:', error);
     } finally {
