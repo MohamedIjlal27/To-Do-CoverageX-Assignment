@@ -83,24 +83,21 @@ export default function TodoPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white py-8 flex items-center justify-center">
-      <div className="w-full max-w-6xl p-8">
-        <div className="flex gap-8">
-          <div className="flex-1 p-8 flex flex-col justify-center">
-            <h1 className="text-2xl font-bold mb-6">Add a Task</h1>
-            <TodoForm onSubmit={handleAddTodo} loading={loading} />
-          </div>
-          <div className="w-px bg-gray-300 mx-2" />
-          <div className="flex-1 flex flex-col justify-start">
-            <TodoList
-              todos={todos}
-              onComplete={handleCompleteTodo}
-              onDelete={handleDeleteTodo}
-              onEdit={handleEditTodo}
-              loadingId={completingId}
-              deletingId={deletingId}
-            />
-          </div>
+    <main className="min-h-screen bg-white py-8">
+      <div className="fixed top-0 left-0 w-80 h-screen bg-gray-50 p-6 border-r border-gray-200 shadow-lg">
+        <h1 className="text-2xl font-bold mb-6">Add a Task</h1>
+        <TodoForm onSubmit={handleAddTodo} loading={loading} />
+      </div>
+      <div className="ml-80 px-8">
+        <div className="max-w-4xl mx-auto">
+          <TodoList
+            todos={todos}
+            onComplete={handleCompleteTodo}
+            onDelete={handleDeleteTodo}
+            onEdit={handleEditTodo}
+            loadingId={completingId}
+            deletingId={deletingId}
+          />
         </div>
       </div>
     </main>
