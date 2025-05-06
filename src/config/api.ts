@@ -15,7 +15,7 @@ export async function createTask(title: string, description: string) {
 }
 
 export async function getAllTasks() {
-  const response = await fetch(`${API_BASE_URL}/tasks/list`, {
+  const response = await fetch(`${API_BASE_URL}/tasks/list?limit=5`, {
     method: 'GET',
   });
   if (!response.ok) {
