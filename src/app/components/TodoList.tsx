@@ -11,10 +11,12 @@ interface TodoListProps {
   todos: Todo[];
   onComplete: (id: string) => void;
   onDelete: (id: string) => void;
+  onEdit: (id: string, title: string, description: string) => void;
   loadingId: string | null;
+  deletingId: string | null;
 }
 
-export default function TodoList({ todos, onComplete, onDelete, loadingId }: TodoListProps) {
+export default function TodoList({ todos, onComplete, onDelete, onEdit, loadingId, deletingId }: TodoListProps) {
   return (
     <div className="space-y-6">
       {todos.map((todo) => (
@@ -25,7 +27,8 @@ export default function TodoList({ todos, onComplete, onDelete, loadingId }: Tod
           description={todo.description}
           onComplete={onComplete}
           onDelete={onDelete}
-          loading={loadingId === todo.id}
+          onEdit={onEdit}
+          loading={loadingId === todo.id || deletingId === todo.id}
         />
       ))}
     </div>

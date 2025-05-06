@@ -16,6 +16,7 @@ export default function TodoPage() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(false);
   const [completingId, setCompletingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -58,13 +59,29 @@ export default function TodoPage() {
     }
   };
 
-  const handleDeleteTodo = async (id: string) => {
+  const handleEditTodo = async (id: string, title: string, description: string) => {
     try {
-      await deleteTask(id);
+      await editTask(id, title, description);
       const data = await getAllTasks();
       setTodos(data);
     } catch (error) {
+      console.error('Failed to edit todo:', error);
+    }
+  };
+
+  const handleDeleteTodo = async (id: string) => {
+    setDeletingId(id);
+    try {
+      await deleteTask(id);
+      // Optimistically update the UI
+      setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+    } catch (error) {
       console.error('Failed to delete todo:', error);
+      // If deletion fails, refresh the list to ensure consistency
+      const data = await getAllTasks();
+      setTodos(data);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -82,7 +99,9 @@ export default function TodoPage() {
               todos={todos}
               onComplete={handleCompleteTodo}
               onDelete={handleDeleteTodo}
+              onEdit={handleEditTodo}
               loadingId={completingId}
+              deletingId={deletingId}
             />
           </div>
         </div>
