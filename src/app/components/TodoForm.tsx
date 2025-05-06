@@ -44,13 +44,13 @@ export default function TodoForm({ onSubmit, loading }: TodoFormProps) {
           required
         />
         <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={loading}
+      <button
+        type="submit"
+        disabled={loading}
             className={`bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-8 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
+      >
             {loading ? 'Adding...' : 'Add'}
-          </button>
+      </button>
         </div>
       </div>
     </form>

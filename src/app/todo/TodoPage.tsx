@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TodoForm from '../components/TodoForm';
 import TodoList from '../components/TodoList';
+import { createTask, getAllTasks, editTask, deleteTask } from '../../config/api';
 
 interface Todo {
   id: string;
@@ -16,16 +17,24 @@ export default function TodoPage() {
   const [loading, setLoading] = useState(false);
   const [completingId, setCompletingId] = useState<string | null>(null);
 
-  const handleAddTodo = (title: string, description: string) => {
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const data = await getAllTasks();
+        setTodos(data);
+      } catch (error) {
+        console.error('Failed to fetch tasks:', error);
+      }
+    };
+    fetchTasks();
+  }, []);
+
+  const handleAddTodo = async (title: string, description: string) => {
     setLoading(true);
     try {
-      const newTodo: Todo = {
-        id: Date.now().toString(),
-        title,
-        description,
-        completed: false
-      };
-      setTodos(prevTodos => [...prevTodos, newTodo]);
+      await createTask(title, description);
+      const data = await getAllTasks();
+      setTodos(data);
     } catch (error) {
       console.error('Failed to add todo:', error);
     } finally {
@@ -33,16 +42,15 @@ export default function TodoPage() {
     }
   };
 
-  const handleCompleteTodo = (id: string) => {
+  const handleCompleteTodo = async (id: string) => {
     setCompletingId(id);
     try {
-      setTodos(prevTodos =>
-        prevTodos.map(todo =>
-          todo.id === id
-            ? { ...todo, completed: !todo.completed }
-            : todo
-        )
-      );
+      const todo = todos.find(t => t.id === id);
+      if (todo) {
+        await editTask(id, todo.title, todo.description);
+        const data = await getAllTasks();
+        setTodos(data);
+      }
     } catch (error) {
       console.error('Failed to complete todo:', error);
     } finally {
@@ -50,9 +58,11 @@ export default function TodoPage() {
     }
   };
 
-  const handleDeleteTodo = (id: string) => {
+  const handleDeleteTodo = async (id: string) => {
     try {
-      setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+      await deleteTask(id);
+      const data = await getAllTasks();
+      setTodos(data);
     } catch (error) {
       console.error('Failed to delete todo:', error);
     }
